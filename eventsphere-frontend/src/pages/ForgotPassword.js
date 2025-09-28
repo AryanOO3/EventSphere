@@ -262,6 +262,7 @@ const ForgotPassword = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [resetUrl, setResetUrl] = useState('');
+  const [response, setResponse] = useState(null);
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -277,11 +278,13 @@ const ForgotPassword = () => {
       setIsLoading(true);
       const response = await axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/auth/forgot-password`, { email });
       
-      if (response.data.resetToken) {
-        setMessage('Email service not configured. Click the button below to reset your password:');
+      setResponse(response);
+      if (response.data.resetUrl) {
+        setMessage(response.data.message);
         setResetUrl(response.data.resetUrl);
       } else {
-        setMessage('Password reset email sent. Check your inbox.');
+        setMessage(response.data.message + ' If you don\'t receive the email, use the button below.');
+        setResetUrl(response.data.fallbackUrl);
       }
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to send reset email');
@@ -322,11 +325,14 @@ const ForgotPassword = () => {
             {isLoading ? 'Sending Reset Link...' : 'Send Reset Email'}
           </Button>
           
-          {resetUrl && (
+          {(resetUrl || (message && message.includes('sent'))) && (
             <Button 
               type="button" 
               className="secondary"
-              onClick={() => window.location.href = resetUrl}
+              onClick={() => {
+                const url = resetUrl || (response?.data?.fallbackUrl);
+                if (url) window.location.href = url;
+              }}
             >
               Reset Password Now
             </Button>

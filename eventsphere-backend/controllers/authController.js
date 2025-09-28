@@ -84,12 +84,16 @@ exports.forgotPassword = async (req, res) => {
 
     try {
       await sendPasswordResetEmail(email, resetToken);
-      res.json({ message: "Password reset email sent. Check your inbox." });
+      res.json({ 
+        message: "Password reset email sent. Check your inbox.",
+        fallbackUrl: `${process.env.FRONTEND_URL}/reset-password/${resetToken}`
+      });
     } catch (emailError) {
       console.error("Email service error:", emailError.message);
       res.json({ 
-        message: "Email service temporarily unavailable. Use this reset link:", 
-        resetUrl: `${process.env.FRONTEND_URL}/reset-password/${resetToken}`
+        message: "Email delivery failed. Use this reset link:", 
+        resetUrl: `${process.env.FRONTEND_URL}/reset-password/${resetToken}`,
+        error: "Email service unavailable"
       });
     }
   } catch (err) {
