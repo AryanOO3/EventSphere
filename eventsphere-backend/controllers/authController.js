@@ -125,9 +125,9 @@ exports.forgotPassword = async (req, res) => {
     } catch (emailError) {
       console.error("Email service error:", emailError.message);
       res.json({ 
-        message: "Email service temporarily unavailable. Use the reset button below:", 
-        resetUrl: resetUrl,
-        emailSent: false
+        message: "Email service not configured. Click the button below to reset your password:", 
+        resetToken: resetToken,
+        resetUrl: resetUrl
       });
     }
   } catch (err) {
