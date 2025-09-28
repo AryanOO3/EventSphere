@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
+  service: 'gmail',
   host: 'smtp.gmail.com',
   port: 587,
   secure: false,
@@ -10,6 +11,15 @@ const transporter = nodemailer.createTransport({
   },
   tls: {
     rejectUnauthorized: false
+  }
+});
+
+// Test email configuration
+transporter.verify((error, success) => {
+  if (error) {
+    console.log('❌ Email service error:', error.message);
+  } else {
+    console.log('✅ Email service ready');
   }
 });
 
@@ -93,15 +103,13 @@ const sendPasswordResetEmail = async (email, resetToken) => {
     `
   };
 
-  console.log('Attempting to send email to:', email);
-  console.log('Email config:', {
-    user: process.env.EMAIL_USER,
-    passLength: process.env.EMAIL_PASS?.length,
-    frontendUrl: process.env.FRONTEND_URL
-  });
+  console.log('📧 Sending reset email to:', email);
+  
+  // Verify before sending
+  await transporter.verify();
   
   const result = await transporter.sendMail(mailOptions);
-  console.log('Email sent successfully:', result.messageId);
+  console.log('✅ Password reset email sent:', result.messageId);
   return result;
 };
 

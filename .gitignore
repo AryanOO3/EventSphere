@@ -1,35 +1,51 @@
 # Dependencies
 node_modules/
-*/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Environment variables
 .env
 .env.local
-.env.production
+.env.development.local
+.env.test.local
+.env.production.local
 
 # Build outputs
 build/
 dist/
+*.tgz
+*.tar.gz
 
 # Logs
 logs/
 *.log
 
-# Database
-*.db
-*.sqlite
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
 
-# Uploads (optional - remove if you want to include sample uploads)
-eventsphere-backend/uploads/
+# Coverage directory used by tools like istanbul
+coverage/
 
-# IDE
+# IDE files
 .vscode/
 .idea/
+*.swp
+*.swo
 
-# OS
+# OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
-# Package locks (optional)
-package-lock.json
-*/package-lock.json
+# Temporary files
+temp-*.md
+deploy-*.md
+*-temp.*

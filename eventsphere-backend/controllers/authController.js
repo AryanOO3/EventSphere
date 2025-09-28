@@ -1,13 +1,34 @@
+// Load all required modules at startup - not lazy loaded
 const pool = require("../db");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { sendPasswordResetEmail } = require("../utils/emailService");
 
+// All modules loaded above this line at module initialization
+
+// Constants
+const SALT_ROUNDS = 10;
+
 exports.register = async (req, res) => {
   const { name, email, password } = req.body;
+  
+  // Input validation
+  if (!name || !email || !password) {
+    return res.status(400).json({ error: "Name, email, and password are required" });
+  }
+  
+  if (password.length < 6) {
+    return res.status(400).json({ error: "Password must be at least 6 characters" });
+  }
+  
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ error: "Invalid email format" });
+  }
+  
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
     const result = await pool.query(
       "INSERT INTO users (name, email, password_hash, role) VALUES ($1, $2, $3, $4) RETURNING id, name, email, role, profile_picture",
       [name, email, hashedPassword, "user"]
@@ -23,12 +44,21 @@ exports.register = async (req, res) => {
     });
   } catch (err) {
     console.error("Register error:", err);
-    res.status(400).json({ error: "Email already in use or invalid data" });
+    if (err.code === '23505') { // PostgreSQL unique violation
+      return res.status(400).json({ error: "Email already in use" });
+    }
+    res.status(500).json({ error: "Registration failed" });
   }
 };
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;
+  
+  // Input validation
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password are required" });
+  }
+  
   try {
     const result = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
     const user = result.rows[0];
@@ -51,8 +81,8 @@ exports.login = async (req, res) => {
       user: { id: user.id, name: user.name, email: user.email, role: user.role, profile_picture: user.profile_picture }
     });
   } catch (err) {
-    console.error(err);
-    res.status(400).json({ error: "Email already in use or invalid data" });
+    console.error("Login error:", err);
+    res.status(500).json({ error: "Login failed" });
   }
 };
 
@@ -82,18 +112,22 @@ exports.forgotPassword = async (req, res) => {
       });
     }
 
+    // Always provide fallback URL regardless of email success/failure
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+    
     try {
       await sendPasswordResetEmail(email, resetToken);
       res.json({ 
-        message: "Password reset email sent. Check your inbox.",
-        fallbackUrl: `${process.env.FRONTEND_URL}/reset-password/${resetToken}`
+        message: "Password reset email sent. Check your inbox. If you don't receive it, use the button below.",
+        resetUrl: resetUrl,
+        emailSent: true
       });
     } catch (emailError) {
       console.error("Email service error:", emailError.message);
       res.json({ 
-        message: "Email delivery failed. Use this reset link:", 
-        resetUrl: `${process.env.FRONTEND_URL}/reset-password/${resetToken}`,
-        error: "Email service unavailable"
+        message: "Email service temporarily unavailable. Use the reset button below:", 
+        resetUrl: resetUrl,
+        emailSent: false
       });
     }
   } catch (err) {
@@ -115,7 +149,7 @@ exports.resetPassword = async (req, res) => {
       return res.status(400).json({ error: "Invalid or expired token" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
     await pool.query(
       "UPDATE users SET password_hash = $1, reset_token = NULL, reset_token_expires = NULL WHERE id = $2",
@@ -131,14 +165,31 @@ exports.resetPassword = async (req, res) => {
 
 exports.updateLastLogin = async (req, res) => {
   try {
+    // Input validation
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ error: "User authentication required" });
+    }
+    
     const userId = req.user.id;
-    await pool.query(
+    
+    // Validate userId is a number
+    if (isNaN(userId) || userId <= 0) {
+      return res.status(400).json({ error: "Invalid user ID" });
+    }
+    
+    const result = await pool.query(
       "UPDATE users SET last_login = NOW() WHERE id = $1",
       [userId]
     );
+    
+    // Check if user was actually updated
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
     res.json({ message: "Login time updated" });
   } catch (err) {
-
-    res.status(200).json({ message: "Login time update skipped" });
+    console.error("Update last login error:", err);
+    res.status(500).json({ error: "Failed to update login time" });
   }
 };

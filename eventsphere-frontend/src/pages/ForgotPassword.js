@@ -279,13 +279,8 @@ const ForgotPassword = () => {
       const response = await axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/auth/forgot-password`, { email });
       
       setResponse(response);
-      if (response.data.resetUrl) {
-        setMessage(response.data.message);
-        setResetUrl(response.data.resetUrl);
-      } else {
-        setMessage(response.data.message + ' If you don\'t receive the email, use the button below.');
-        setResetUrl(response.data.fallbackUrl);
-      }
+      setMessage(response.data.message);
+      setResetUrl(response.data.resetUrl);
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to send reset email');
     } finally {
@@ -325,12 +320,12 @@ const ForgotPassword = () => {
             {isLoading ? 'Sending Reset Link...' : 'Send Reset Email'}
           </Button>
           
-          {(resetUrl || (message && message.includes('sent'))) && (
+          {message && (
             <Button 
               type="button" 
               className="secondary"
               onClick={() => {
-                const url = resetUrl || (response?.data?.fallbackUrl);
+                const url = resetUrl || response?.data?.resetUrl;
                 if (url) window.location.href = url;
               }}
             >
