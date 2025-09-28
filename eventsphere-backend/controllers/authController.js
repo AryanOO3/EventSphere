@@ -88,7 +88,7 @@ exports.forgotPassword = async (req, res) => {
       res.json({ 
         message: "Email service not configured. Use this reset link:", 
         resetToken: resetToken,
-        resetUrl: `http://localhost:3000/reset-password/${resetToken}`
+        resetUrl: `${process.env.FRONTEND_URL}/reset-password/${resetToken}`
       });
     }
   } catch (err) {
