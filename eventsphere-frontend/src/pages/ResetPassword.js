@@ -309,9 +309,8 @@ const ResetPassword = () => {
   const passwordStrength = getPasswordStrength(formData.password);
   
   return (
-    <>
+    <PageContainer className="page-container">
       <ThemeBackground />
-      <PageContainer style={{ position: 'relative', zIndex: 1 }}>
       <FormContainer className="animate-fade-in">
         <FormHeader>
           <FormTitle>Set New <span>Password</span></FormTitle>
@@ -365,8 +364,7 @@ const ResetPassword = () => {
           </Button>
         </Form>
       </FormContainer>
-      </PageContainer>
-    </>
+    </PageContainer>
   );
 };
 
