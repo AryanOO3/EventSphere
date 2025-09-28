@@ -9,10 +9,8 @@ const PageContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--bg-white) 0%, var(--bg-light) 100%);
   padding: 40px 20px;
   position: relative;
-  transition: var(--transition);
   
   @media screen and (max-width: 768px) {
     padding: 20px 16px;
