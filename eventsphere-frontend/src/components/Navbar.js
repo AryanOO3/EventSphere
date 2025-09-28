@@ -62,9 +62,10 @@ const NavigationMenu = styled.ul`
     left: ${({ $isOpen }) => ($isOpen ? '0' : '-100%')};
     opacity: 1;
     transition: all 0.5s ease;
-    background: rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(15px);
+    background: var(--bg-primary);
+    border-right: 1px solid var(--border-color);
     padding-top: 30px;
+    box-shadow: var(--box-shadow-lg);
   }
 `;
 
