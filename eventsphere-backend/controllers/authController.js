@@ -75,9 +75,10 @@ exports.forgotPassword = async (req, res) => {
         [resetToken, resetTokenExpires, user.id]
       );
     } catch (columnError) {
-      return res.json({ 
-        message: "Password reset requested. Contact admin to reset your password.",
-        note: "Reset token functionality requires database schema update"
+      console.error("Database schema error:", columnError.message);
+      return res.status(500).json({ 
+        error: "Reset password functionality is not available. Please contact support.",
+        note: "Database schema needs to be updated with reset token columns"
       });
     }
 
@@ -85,9 +86,9 @@ exports.forgotPassword = async (req, res) => {
       await sendPasswordResetEmail(email, resetToken);
       res.json({ message: "Password reset email sent. Check your inbox." });
     } catch (emailError) {
+      console.error("Email service error:", emailError.message);
       res.json({ 
-        message: "Email service not configured. Use this reset link:", 
-        resetToken: resetToken,
+        message: "Email service temporarily unavailable. Use this reset link:", 
         resetUrl: `${process.env.FRONTEND_URL}/reset-password/${resetToken}`
       });
     }
