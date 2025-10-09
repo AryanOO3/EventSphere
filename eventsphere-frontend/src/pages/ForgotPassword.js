@@ -9,8 +9,10 @@ const PageContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  background: linear-gradient(135deg, var(--bg-white) 0%, var(--bg-light) 100%);
   padding: 40px 20px;
   position: relative;
+  transition: var(--transition);
   
   @media screen and (max-width: 768px) {
     padding: 20px 16px;
@@ -262,7 +264,6 @@ const ForgotPassword = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [resetUrl, setResetUrl] = useState('');
-  const [response, setResponse] = useState(null);
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -276,11 +277,14 @@ const ForgotPassword = () => {
     
     try {
       setIsLoading(true);
-      const response = await axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/auth/forgot-password`, { email });
+      const response = await axios.post('http://localhost:5000/api/auth/forgot-password', { email });
       
-      setResponse(response);
-      setMessage(response.data.message);
-      setResetUrl(response.data.resetUrl);
+      if (response.data.resetToken) {
+        setMessage('Email service not configured. Click the button below to reset your password:');
+        setResetUrl(response.data.resetUrl);
+      } else {
+        setMessage('Password reset email sent. Check your inbox.');
+      }
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to send reset email');
     } finally {
@@ -320,14 +324,11 @@ const ForgotPassword = () => {
             {isLoading ? 'Sending Reset Link...' : 'Send Reset Email'}
           </Button>
           
-          {message && (
+          {resetUrl && (
             <Button 
               type="button" 
               className="secondary"
-              onClick={() => {
-                const url = resetUrl || response?.data?.resetUrl;
-                if (url) window.location.href = url;
-              }}
+              onClick={() => window.location.href = resetUrl}
             >
               Reset Password Now
             </Button>

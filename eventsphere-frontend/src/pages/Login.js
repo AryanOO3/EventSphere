@@ -323,12 +323,7 @@ const Login = () => {
           <FormTitle>Welcome Back</FormTitle>
           <FormSubtitle>Sign in to your EventSphere account</FormSubtitle>
           
-          <DemoCredentials>
-            <strong>🚀 Quick Demo Access:</strong><br/>
-            <strong>SuperAdmin:</strong> superadmin@eventsphere.com / super123<br/>
-            <strong>Admin:</strong> admin@eventsphere.com / admin123<br/>
-            <strong>User:</strong> user@eventsphere.com / user123
-          </DemoCredentials>
+
         </FormHeader>
         
         <Form onSubmit={handleSubmit}>
@@ -360,26 +355,7 @@ const Login = () => {
             />
           </FormGroup>
           
-          <QuickLoginGrid>
-            <SuperAdminBtn 
-              type="button" 
-              onClick={() => setFormData({ email: 'superadmin@eventsphere.com', password: 'super123' })}
-            >
-              SuperAdmin
-            </SuperAdminBtn>
-            <AdminBtn 
-              type="button" 
-              onClick={() => setFormData({ email: 'admin@eventsphere.com', password: 'admin123' })}
-            >
-              Admin
-            </AdminBtn>
-            <UserBtn 
-              type="button" 
-              onClick={() => setFormData({ email: 'user@eventsphere.com', password: 'user123' })}
-            >
-              User
-            </UserBtn>
-          </QuickLoginGrid>
+
           
           <LoginButton type="submit" disabled={isLoading}>
             {isLoading ? 'Signing in...' : 'Sign In'}

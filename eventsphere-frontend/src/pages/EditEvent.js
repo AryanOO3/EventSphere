@@ -495,16 +495,7 @@ const EditEvent = () => {
         formDataToSend.append('cover_image', formData.cover_image);
       }
       
-      console.log('Sending update data:', {
-        title: formData.title,
-        description: formData.description,
-        date: formData.event_date,
-        time: formData.event_time,
-        location: formData.location,
-        category_id: formData.category_id,
-        tags: formData.tags,
-        rsvp_limit: formData.rsvp_limit
-      });
+
       
       await api.put(`/events/${id}`, formDataToSend, {
         headers: { 'Content-Type': 'multipart/form-data' }

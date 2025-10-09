@@ -293,7 +293,7 @@ const ResetPassword = () => {
     
     try {
       setIsLoading(true);
-      await axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/auth/reset-password`, {
+      await axios.post('http://localhost:5000/api/auth/reset-password', {
         token,
         password: formData.password
       });
@@ -311,8 +311,8 @@ const ResetPassword = () => {
   return (
     <>
       <ThemeBackground />
-      <PageContainer className="page-container">
-        <FormContainer className="animate-fade-in">
+      <PageContainer style={{ position: 'relative', zIndex: 1 }}>
+      <FormContainer className="animate-fade-in">
         <FormHeader>
           <FormTitle>Set New <span>Password</span></FormTitle>
           <FormSubtitle>
@@ -364,7 +364,7 @@ const ResetPassword = () => {
             {isLoading ? 'Resetting Password...' : 'Reset Password'}
           </Button>
         </Form>
-        </FormContainer>
+      </FormContainer>
       </PageContainer>
     </>
   );

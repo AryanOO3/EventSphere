@@ -13,21 +13,8 @@ const logger = require('./utils/logger');
 
 const app = express();
 
-// Simple CORS fix for Railway deployment
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
-  }
-  next();
-});
-
 app.use(cors({
-  origin: true,
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   credentials: true
 }));
 
@@ -50,7 +37,6 @@ app.get("/", (req, res) => res.send("EventSphere Backend Running"));
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, () => {
   logger.info(`Server started on port ${PORT}`);
-  console.log(`Backend running at: ${process.env.NODE_ENV === 'production' ? 'Railway' : 'localhost'}:${PORT}`);
 });

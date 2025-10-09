@@ -203,44 +203,46 @@ exports.updateEvent = async (req, res) => {
     }
     
     const coverImage = req.files && req.files.cover_image ? `/uploads/covers/${req.files.cover_image[0].filename}` : null;
+    
+    // Handle cover image update
     if (coverImage) {
       try {
-        const oldEventResult = await pool.query("SELECT cover_image FROM events WHERE id = $1", [id]);
-        if (oldEventResult.rows[0]?.cover_image) {
-          const fs = require('fs');
-          const path = require('path');
-          const oldImagePath = path.join(__dirname, '..', oldEventResult.rows[0].cover_image);
-          if (fs.existsSync(oldImagePath)) {
-            fs.unlinkSync(oldImagePath);
-          }
-        }
-        
+        // Delete old cover image files
         await pool.query("DELETE FROM event_files WHERE event_id = $1 AND file_type = 'image/cover'", [id]);
-      } catch (deleteError) {
         
+        // Insert new cover image
+        await pool.query(
+          "INSERT INTO event_files (event_id, filename, original_name, file_path, file_type, uploaded_by) VALUES ($1, $2, $3, $4, $5, $6)",
+          [id, req.files.cover_image[0].filename, 'cover_image', coverImage, 'image/cover', userId]
+        );
+        
+        console.log('Cover image updated:', coverImage);
+      } catch (imageError) {
+        console.error('Cover image update error:', imageError);
       }
     }
     
     let result;
     try {
+      // Try full update first
       result = await pool.query(
-        "UPDATE events SET title = $1, description = $2, location = $3, date = $4 WHERE id = $5 RETURNING *",
-        [title, description, location, date, id]
+        "UPDATE events SET title = $1, description = $2, location = $3, date = $4, time = $5, category_id = $6, is_published = $7, updated_at = NOW() WHERE id = $8 RETURNING *",
+        [title, description, location, date, time, category_id || null, is_published || true, id]
       );
-    } catch (basicError) {
-      throw basicError;
-    }
-    
-    if (coverImage) {
+    } catch (columnError) {
+      console.log("Full update failed, trying basic update:", columnError.message);
+      // Fallback to basic update if columns don't exist
       try {
-        await pool.query(
-          "INSERT INTO event_files (event_id, filename, original_name, file_path, file_type, uploaded_by) VALUES ($1, $2, $3, $4, $5, $6)",
-          [id, req.files.cover_image[0].filename, 'cover_image', coverImage, 'image/cover', userId]
+        result = await pool.query(
+          "UPDATE events SET title = $1, description = $2, location = $3, date = $4 WHERE id = $5 RETURNING *",
+          [title, description, location, date, id]
         );
-      } catch (fileError) {
-        
+      } catch (basicError) {
+        throw basicError;
       }
     }
+    
+    // Cover image already handled above
     
     if (req.files && req.files.event_files) {
       try {
@@ -287,7 +289,9 @@ exports.updateEvent = async (req, res) => {
     res.json({ event: result.rows[0], message: "Event updated successfully" });
   } catch (err) {
     console.error("Update event error:", err);
-    res.status(500).json({ error: "Server error" });
+    console.error("Error details:", err.message);
+    console.error("Stack trace:", err.stack);
+    res.status(500).json({ error: `Server error: ${err.message}` });
   }
 };
 

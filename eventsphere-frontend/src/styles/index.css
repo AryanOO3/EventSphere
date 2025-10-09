@@ -22,7 +22,6 @@
   --text-muted: #A0AEC0;
   --bg-light: #F7FAFC;
   --bg-white: #FFFFFF;
-  --bg-primary: #FFFFFF;
   --bg-body: linear-gradient(135deg, #87ceeb 0%, #b8e6ff 50%, #e0f4ff 100%);
   --bg-card: #FFFFFF;
   --border-color: #E2E8F0;
@@ -294,7 +293,6 @@ a:hover::after {
   --text-muted: #888888;
   --bg-light: #3a3a3a;
   --bg-white: #2d2d2d;
-  --bg-primary: #1a1a1a;
   --bg-body: linear-gradient(135deg, #000000 0%, #000000 50%, #0a0a0a 100%);
   --bg-card: #2d2d2d;
   --border-color: #404040;
