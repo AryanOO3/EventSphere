@@ -401,7 +401,7 @@ const ChartTitle = styled.h3`
 `;
 
 const SuperAdminPanel = () => {
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, refreshUser } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
   const [events, setEvents] = useState([]);
   const [activities, setActivities] = useState([]);
@@ -463,10 +463,21 @@ const SuperAdminPanel = () => {
 
   const updateUserRole = async (userId, newRole) => {
     try {
-      await api.put(`/admin/users/${userId}/role`, { role: newRole });
+      console.log(`Updating user ${userId} to role ${newRole}`);
+      const response = await api.put(`/admin/users/${userId}/role`, { role: newRole });
+      console.log('Role update response:', response.data);
+      
+      // If updating current user's role, refresh the user data
+      if (parseInt(userId) === currentUser.id) {
+        await refreshUser();
+      }
+      
       fetchUsers();
+      alert(`User role updated to ${newRole} successfully!`);
     } catch (error) {
       console.error('Failed to update user role:', error);
+      console.error('Error response:', error.response?.data);
+      alert(`Failed to update user role: ${error.response?.data?.error || error.message}`);
     }
   };
 

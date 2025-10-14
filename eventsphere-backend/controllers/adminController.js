@@ -1,7 +1,15 @@
-const pool = require("../db");
+let poolCache = null;
+const getPool = async () => {
+  if (!poolCache) {
+    const db = await import("../db.js");
+    poolCache = db.default || db;
+  }
+  return poolCache;
+};
 
 exports.getAllUsers = async (req, res) => {
   try {
+    const pool = await getPool();
     const result = await pool.query(
       "SELECT id, name, email, role, is_blocked, created_at FROM users ORDER BY id DESC"
     );
@@ -19,17 +27,30 @@ exports.getAllUsers = async (req, res) => {
 
 exports.updateUserRole = async (req, res) => {
   try {
+    const pool = await getPool();
     const { id } = req.params;
     const { role } = req.body;
+    
+    console.log(`Updating user ${id} role to ${role}`);
     
     if (!['user', 'admin', 'superadmin'].includes(role)) {
       return res.status(400).json({ error: "Invalid role" });
     }
     
+    // First check if user exists
+    const userCheck = await pool.query("SELECT id, role FROM users WHERE id = $1", [id]);
+    if (userCheck.rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    console.log(`User ${id} current role: ${userCheck.rows[0].role}, updating to: ${role}`);
+    
     const result = await pool.query(
-      "UPDATE users SET role = $1, updated_at = NOW() WHERE id = $2 RETURNING id, name, email, role",
+      "UPDATE users SET role = $1 WHERE id = $2 RETURNING id, name, email, role",
       [role, id]
     );
+    
+    console.log(`Update result:`, result.rows[0]);
     
     if (result.rows.length === 0) {
       return res.status(404).json({ error: "User not found" });
@@ -44,6 +65,7 @@ exports.updateUserRole = async (req, res) => {
 
 exports.blockUser = async (req, res) => {
   try {
+    const pool = await getPool();
     const { id } = req.params;
     const { is_blocked } = req.body;
     
@@ -65,6 +87,7 @@ exports.blockUser = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
   try {
+    const pool = await getPool();
     const { id } = req.params;
     const currentUserId = req.user.id;
     
@@ -89,6 +112,7 @@ exports.deleteUser = async (req, res) => {
 
 exports.getAdminStats = async (req, res) => {
   try {
+    const pool = await getPool();
     const usersResult = await pool.query("SELECT COUNT(*) as total_users FROM users");
     const activeEventsResult = await pool.query("SELECT COUNT(*) as active_events FROM events WHERE date >= CURRENT_DATE");
     const completedEventsResult = await pool.query("SELECT COUNT(*) as completed_events FROM events WHERE date < CURRENT_DATE");
@@ -119,6 +143,7 @@ exports.getAdminStats = async (req, res) => {
 
 exports.getAllEvents = async (req, res) => {
   try {
+    const pool = await getPool();
     const result = await pool.query(
       "SELECT e.*, u.name as organizer_name, c.name as category_name FROM events e LEFT JOIN users u ON e.organizer_id = u.id LEFT JOIN categories c ON e.category_id = c.id ORDER BY e.created_at DESC"
     );
@@ -131,6 +156,7 @@ exports.getAllEvents = async (req, res) => {
 
 exports.updateEventStatus = async (req, res) => {
   try {
+    const pool = await getPool();
     const { id } = req.params;
     const { is_published } = req.body;
     
@@ -148,6 +174,7 @@ exports.updateEventStatus = async (req, res) => {
 
 exports.getActivityLogs = async (req, res) => {
   try {
+    const pool = await getPool();
     let rsvpLogs = { rows: [] };
     try {
       rsvpLogs = await pool.query(

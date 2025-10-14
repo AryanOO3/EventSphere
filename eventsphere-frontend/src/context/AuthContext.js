@@ -99,8 +99,21 @@ export const AuthProvider = ({ children }) => {
     setCurrentUser(null);
   };
 
+  const refreshUser = async () => {
+    try {
+      const response = await api.get('/user/profile');
+      const updatedUser = response.data.user;
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      setCurrentUser(updatedUser);
+      return updatedUser;
+    } catch (error) {
+      console.error('Failed to refresh user:', error);
+      return null;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ currentUser, setCurrentUser, loading, error, login, register, logout }}>
+    <AuthContext.Provider value={{ currentUser, setCurrentUser, loading, error, login, register, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

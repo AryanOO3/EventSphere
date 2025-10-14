@@ -18,6 +18,17 @@ router.get("/test-users", async (req, res) => {
   }
 });
 
+router.get("/test-role-update/:id", async (req, res) => {
+  try {
+    const pool = require("../db");
+    const { id } = req.params;
+    const result = await pool.query("SELECT id, name, email, role FROM users WHERE id = $1", [id]);
+    res.json({ user: result.rows[0] || null });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 router.get("/stats", verifyToken, checkRole(['admin', 'superadmin']), getAdminStats);
 router.get("/users", verifyToken, checkRole(['admin', 'superadmin']), getAllUsers);
 router.put("/users/:id/role", verifyToken, checkRole(['superadmin']), updateUserRole);

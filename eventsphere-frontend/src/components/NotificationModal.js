@@ -23,7 +23,7 @@ const NotificationOverlay = styled.div`
 `;
 
 const NotificationPanel = styled.div`
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   border-radius: var(--border-radius-lg);
   width: 90%;

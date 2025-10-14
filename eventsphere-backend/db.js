@@ -1,11 +1,11 @@
 const { Pool } = require('pg');
 
 const pool = new Pool({
-    user: 'eventsphere_user',
-    host: 'localhost',
-    database: 'eventsphere_db',
-    password: 'test1234',
-    port: 5432,
+    user: process.env.DB_USER || 'eventsphere_user',
+    host: process.env.DB_HOST || 'localhost',
+    database: process.env.DB_NAME || 'eventsphere_db',
+    password: process.env.DB_PASSWORD || 'test1234',
+    port: process.env.DB_PORT || 5432,
 });
 
 module.exports = pool;
