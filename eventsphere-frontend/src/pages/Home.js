@@ -66,6 +66,11 @@ const HeroTitle = styled.h1`
   line-height: 1.2;
   letter-spacing: -0.02em;
   
+  [data-theme="light"] & {
+    color: var(--text-primary);
+    text-shadow: 2px 2px 8px rgba(255, 255, 255, 0.8);
+  }
+  
   span {
     background: linear-gradient(135deg, #9B95FF 0%, #C490FF 50%, #E0A8FF 100%);
     -webkit-background-clip: text;
@@ -104,6 +109,11 @@ const HeroSubtitle = styled.p`
   font-weight: 400;
   line-height: 1.6;
   
+  [data-theme="light"] & {
+    color: var(--text-secondary);
+    text-shadow: 1px 1px 4px rgba(255, 255, 255, 0.8);
+  }
+  
   @media screen and (max-width: 1024px) {
     font-size: 1.1rem;
     max-width: 600px;
@@ -140,7 +150,13 @@ const HeroButton = styled(Link)`
   display: inline-block;
   padding: 16px 40px;
   background: ${props => props.$primary ? 'var(--gradient-primary)' : 'rgba(255, 255, 255, 0.1)'};
-  color: white;
+  color: ${props => props.$primary ? 'white' : 'transparent'};
+  ${props => !props.$primary && `
+    background: linear-gradient(135deg, #9B95FF 0%, #C490FF 50%, #E0A8FF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  `}
   border: 2px solid ${props => props.$primary ? 'transparent' : 'rgba(255, 255, 255, 0.3)'};
   border-radius: var(--border-radius);
   font-weight: 700;
@@ -170,28 +186,15 @@ const HeroButton = styled(Link)`
   &:hover {
     transform: translateY(-4px);
     box-shadow: var(--box-shadow-xl);
-    background: ${props => props.$primary ? 'linear-gradient(135deg, #8B7FFF 0%, #B490FF 50%, #D8A7FF 100%)' : 'rgba(255, 255, 255, 0.2)'};
-    color: white;
-    border-color: transparent;
-  }
-  
-  [data-theme="light"] & {
-    ${props => !props.$primary && `
-      background: rgba(255, 255, 255, 0.9);
-      border-color: rgba(255, 255, 255, 0.7);
-      background: linear-gradient(135deg, #9B95FF 0%, #C490FF 50%, #E0A8FF 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
-      
-      &:hover {
-        background: linear-gradient(135deg, #8B7FFF 0%, #B490FF 50%, #D8A7FF 100%);
-        -webkit-background-clip: initial;
-        -webkit-text-fill-color: white;
-        background-clip: initial;
-        border-color: rgba(255, 255, 255, 0.9);
-      }
+    ${props => props.$primary ? `
+      background: linear-gradient(135deg, #8B7FFF 0%, #B490FF 50%, #D8A7FF 100%);
+    ` : `
+      background: var(--gradient-primary);
+      -webkit-background-clip: initial;
+      -webkit-text-fill-color: white;
+      background-clip: initial;
+      color: white;
+      border-color: transparent;
     `}
   }
   

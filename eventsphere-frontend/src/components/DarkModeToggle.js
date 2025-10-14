@@ -242,6 +242,8 @@ const DarkModeToggle = () => {
     if (savedTheme === 'true') {
       setIsDark(true);
       document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'light');
     }
   }, []);
 

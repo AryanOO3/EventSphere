@@ -14,14 +14,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Test connection on startup
-transporter.verify((error, success) => {
-  if (error) {
-    console.log('❌ Email service error:', error.message);
-  } else {
-    console.log('✅ Email service ready');
-  }
-});
+
 
 const sendPasswordResetEmail = async (email, resetToken) => {
   const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
@@ -122,9 +115,7 @@ const sendPasswordResetEmail = async (email, resetToken) => {
     `
   };
 
-  console.log('📧 Sending reset email to:', email);
   const result = await transporter.sendMail(mailOptions);
-  console.log('✅ Email sent successfully:', result.messageId);
   return result;
 };
 
