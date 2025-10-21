@@ -102,16 +102,17 @@ const Input = styled.input`
   
   &:focus {
     outline: none;
-    border: 2px solid transparent;
-    background: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05)) padding-box, var(--gradient-primary) border-box;
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
     transform: translateY(-1px);
   }
   
   &:hover {
-    border: 2px solid transparent;
-    background: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05)) padding-box, var(--gradient-primary) border-box;
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.05);
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(155, 149, 255, 0.15);
   }
   
   &::placeholder {

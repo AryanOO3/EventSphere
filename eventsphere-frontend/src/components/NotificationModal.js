@@ -115,7 +115,7 @@ const DismissButton = styled.button`
   }
   
   &:hover {
-    background: var(--gradient-primary);
+    background: var(--primary);
     color: white;
     border-color: transparent;
     transform: rotate(90deg) scale(1.1);
@@ -126,6 +126,7 @@ const DismissButton = styled.button`
 const NotificationsContainer = styled.div`
   max-height: 60vh;
   overflow-y: auto;
+  overflow-x: hidden;
   
   &::-webkit-scrollbar {
     width: 6px;
@@ -144,7 +145,7 @@ const NotificationsContainer = styled.div`
 const NotificationCard = styled.div`
   padding: 24px 32px;
   border-bottom: 1px solid var(--border-color);
-  background: ${props => props.read ? 'rgba(255, 255, 255, 0.02)' : 'linear-gradient(135deg, rgba(155, 149, 255, 0.08) 0%, rgba(224, 168, 255, 0.08) 100%)'};
+  background: ${props => props.read ? 'rgba(255, 255, 255, 0.02)' : 'rgba(155, 149, 255, 0.08)'};
   backdrop-filter: blur(20px);
   position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -155,7 +156,7 @@ const NotificationCard = styled.div`
   &:hover {
     background: rgba(255, 255, 255, 0.05);
     transform: translateX(4px);
-    box-shadow: 0 4px 20px rgba(155, 149, 255, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   }
   
   &:last-child {
@@ -191,7 +192,7 @@ const RemoveButton = styled.button`
   margin-top: 4px;
   
   &:hover {
-    background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
+    background: #ff4757;
     color: white;
     border-color: transparent;
     transform: scale(1.15) rotate(90deg);
@@ -347,7 +348,7 @@ const ClearAllButton = styled.button`
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   
   &:hover {
-    background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
+    background: #ff4757;
     color: white;
     border-color: transparent;
     transform: translateY(-1px);
