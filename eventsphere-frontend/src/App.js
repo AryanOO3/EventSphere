@@ -28,6 +28,14 @@ import { testConnection } from './utils/api';
 import { ROLES, PERMISSIONS } from './utils/rbac';
 import DarkModeToggle from './components/DarkModeToggle';
 import Footer from './components/Footer';
+import HelpCenter from './pages/HelpCenter';
+import ContactUs from './pages/ContactUs';
+import FAQ from './pages/FAQ';
+import Feedback from './pages/Feedback';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
+import CookiePolicy from './pages/CookiePolicy';
+import AboutUs from './pages/AboutUs';
 
 function App() {
   const [backendStatus, setBackendStatus] = useState({ connected: false, checking: true });
@@ -168,6 +176,14 @@ function App() {
             </ProtectedRoute>
           } 
         />
+        <Route path="/help" element={<HelpCenter />} />
+        <Route path="/contact" element={<ContactUs />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/feedback" element={<Feedback />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsOfService />} />
+        <Route path="/cookies" element={<CookiePolicy />} />
+        <Route path="/about" element={<AboutUs />} />
       </Routes>
       <Footer />
     </>
