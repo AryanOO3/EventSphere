@@ -389,6 +389,7 @@ const Events = () => {
                 <EventHeading>{event.title}</EventHeading>
                 <EventInfo>
                   <span>📅 {new Date(event.date).toLocaleDateString()}</span>
+                  {event.time && <span>🕐 {event.time}</span>}
                   <span>📍 {event.location}</span>
                   {event.category_name && <span>🏷️ {event.category_name}</span>}
                 </EventInfo>

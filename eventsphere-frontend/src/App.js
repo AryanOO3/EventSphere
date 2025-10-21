@@ -27,6 +27,7 @@ import { AuthContext } from './context/AuthContext';
 import { testConnection } from './utils/api';
 import { ROLES, PERMISSIONS } from './utils/rbac';
 import DarkModeToggle from './components/DarkModeToggle';
+import Footer from './components/Footer';
 
 function App() {
   const [backendStatus, setBackendStatus] = useState({ connected: false, checking: true });
@@ -168,6 +169,7 @@ function App() {
           } 
         />
       </Routes>
+      <Footer />
     </>
   );
 }
