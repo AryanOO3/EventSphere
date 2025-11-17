@@ -112,16 +112,16 @@ const Input = styled.input`
   outline: none !important;
   
   &:focus {
-    border: 2px solid transparent;
-    background: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05)) padding-box, var(--gradient-primary) border-box;
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
     outline: none !important;
     transform: translateY(-2px);
   }
   
   &:hover:not(:disabled) {
-    border: 2px solid transparent;
-    background: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05)) padding-box, var(--gradient-primary) border-box;
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.05);
     transform: translateY(-1px);
     box-shadow: var(--box-shadow-lg);
   }

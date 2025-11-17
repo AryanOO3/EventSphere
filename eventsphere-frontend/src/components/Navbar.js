@@ -62,9 +62,10 @@ const NavigationMenu = styled.ul`
     left: ${({ $isOpen }) => ($isOpen ? '0' : '-100%')};
     opacity: 1;
     transition: all 0.5s ease;
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--bg-white);
     backdrop-filter: blur(15px);
-    padding-top: 30px;
+    padding: 20px 0;
+    box-shadow: var(--box-shadow-lg);
   }
 `;
 
@@ -76,8 +77,13 @@ const MenuItem = styled.li`
   @media screen and (max-width: 960px) {
     width: 100%;
     height: auto;
-    padding: 20px 0;
+    padding: 15px 0;
     justify-content: center;
+    border-bottom: 1px solid var(--border-color);
+    
+    &:last-child {
+      border-bottom: none;
+    }
   }
 `;
 
@@ -119,10 +125,10 @@ const MenuLink = styled(Link)`
     text-align: center;
     width: 100%;
     display: table;
-    padding: 20px;
+    padding: 15px 20px;
     
     &::after {
-      bottom: 10px;
+      bottom: 5px;
     }
   }
 `;

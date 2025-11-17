@@ -103,10 +103,24 @@ const Input = styled.input`
   &:focus {
     outline: none;
     border-color: var(--primary);
+<<<<<<< HEAD
+=======
+    background: rgba(255, 255, 255, 0.05);
+>>>>>>> 61f479e245c576d1f4fa065c0d8838e5da2f0621
     box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
     transform: translateY(-1px);
   }
   
+<<<<<<< HEAD
+=======
+  &:hover {
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(155, 149, 255, 0.15);
+  }
+  
+>>>>>>> 61f479e245c576d1f4fa065c0d8838e5da2f0621
   &::placeholder {
     color: var(--text-muted);
   }
