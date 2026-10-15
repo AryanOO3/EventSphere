@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport(
 
 
 const sendPasswordResetEmail = async (email, resetToken) => {
-  const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+  const resetUrl = `${(process.env.FRONTEND_URL || 'http://localhost:3000').replace(/\/$/, '')}/reset-password/${resetToken}`;
   
   const mailOptions = {
     from: `"EventSphere" <${process.env.EMAIL_USER}>`,
@@ -107,6 +107,7 @@ const sendPasswordResetEmail = async (email, resetToken) => {
   };
 
   const result = await transporter.sendMail(mailOptions);
+  console.log('SendGrid response:', JSON.stringify(result));
   return result;
 };
 
