@@ -81,31 +81,18 @@ npm install
 
 ## Database Configuration
 
-### 7. Create Database and User
-Open your terminal/command prompt and connect to PostgreSQL:
+### 7. Create Database, User and Restore Data
+Open pgAdmin and create a database named `eventsphere_db`, then open Command Prompt and run:
 
-```bash
-# Connect to PostgreSQL (you'll be prompted for the postgres password)
-psql -U postgres
+```cmd
+-- Create the application user
+"C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres -d eventsphere_db -c "CREATE USER eventsphere_user WITH PASSWORD 'test1234';"
 
-# Or on Windows, you might need:
-# psql -U postgres -h localhost
+-- Restore the database from the dump file (db.sql is a binary custom-format dump)
+"C:\Program Files\PostgreSQL\18\bin\pg_restore.exe" -U postgres -d eventsphere_db "path\to\EventSphere\db.sql"
 ```
 
-Once connected, run these SQL commands:
-```sql
--- Create the database
-CREATE DATABASE eventsphere_db;
-
--- Create a user for the application
-CREATE USER eventsphere_user WITH PASSWORD 'test1234';
-
--- Grant all privileges to the user
-GRANT ALL PRIVILEGES ON DATABASE eventsphere_db TO eventsphere_user;
-
--- Exit PostgreSQL
-\q
-```
+**Note:** The `db.sql` file is a PostgreSQL custom-format dump, so it must be restored using `pg_restore`, NOT `psql`. Using `psql` will result in an error.
 
 ### 8. Create Environment Configuration
 Navigate to the backend folder and create environment variables:
