@@ -13,10 +13,14 @@ const logger = require('./utils/logger');
 
 const app = express();
 
+const allowedOrigins = [
+  ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL.replace(/\/$/, '')] : []),
+  'http://localhost:3000'
+];
+
 app.use(cors({
   origin: (origin, callback) => {
-    const allowed = (process.env.FRONTEND_URL || 'http://localhost:3000').replace(/\/$/, '');
-    if (!origin || origin.replace(/\/$/, '') === allowed) {
+    if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ''))) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));

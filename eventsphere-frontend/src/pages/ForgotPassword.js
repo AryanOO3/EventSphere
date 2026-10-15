@@ -277,7 +277,7 @@ const ForgotPassword = () => {
     
     try {
       setIsLoading(true);
-      const response = await axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/auth/forgot-password`, { email });
+      const response = await axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/auth/forgot-password`, { email }, { timeout: 30000 });
       
       if (response.data.resetToken) {
         setMessage('Email service not configured. Click the button below to reset your password:');
@@ -286,7 +286,11 @@ const ForgotPassword = () => {
         setMessage('Password reset email sent. Check your inbox.');
       }
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to send reset email');
+      if (err.code === 'ECONNABORTED') {
+        setError('Server is waking up, please try again in 30 seconds.');
+      } else {
+        setError(err.response?.data?.error || 'Failed to send reset email');
+      }
     } finally {
       setIsLoading(false);
     }
