@@ -378,7 +378,7 @@ const Events = () => {
             >
               {(event.cover_image || event.event_image) && (
                 <EventThumbnail 
-                  src={`http://localhost:5000${event.cover_image || event.event_image}`} 
+                  src={`${process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000'}${event.cover_image || event.event_image}`} 
                   alt={event.title} 
                   onError={(e) => {
                     e.target.style.display = 'none';

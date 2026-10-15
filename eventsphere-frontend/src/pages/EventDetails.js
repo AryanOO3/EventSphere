@@ -660,9 +660,10 @@ const EventDetails = () => {
       const response = await api.get(`/events/${id}`);
       const files = response.data.event?.files || [];
       const imageFiles = files.filter(file => file.file_type?.startsWith('image/') && file.file_type !== 'image/cover');
+      const baseUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
       setImages(imageFiles.map(file => ({
         id: file.filename,
-        image_path: `http://localhost:5000${file.file_path}`
+        image_path: `${baseUrl}${file.file_path}`
       })));
     } catch (error) {
       setImages([]);
@@ -674,12 +675,13 @@ const EventDetails = () => {
       const response = await api.get(`/events/${id}`);
       const files = response.data.event?.files || [];
       const nonImageFiles = files.filter(file => !file.file_type?.startsWith('image/') || file.file_type === 'image/cover');
+      const baseUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
       setEventFiles(nonImageFiles.map(file => ({
         id: file.id,
         name: file.original_name,
         size: 0,
         type: file.file_type,
-        url: `http://localhost:5000${file.file_path}`
+        url: `${baseUrl}${file.file_path}`
       })));
     } catch (error) {
       setEventFiles([]);
@@ -819,7 +821,7 @@ const EventDetails = () => {
       
       {event.cover_image && (
         <HeroImage 
-          src={`http://localhost:5000${event.cover_image}`} 
+          src={`${process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000'}${event.cover_image}`} 
           alt={event.title}
         />
       )}
