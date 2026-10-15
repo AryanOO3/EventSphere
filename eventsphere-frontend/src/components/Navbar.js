@@ -362,8 +362,8 @@ const Navbar = () => {
                       {currentUser.profile_picture ? (
                         <UserAvatar 
                           src={currentUser.profile_picture.startsWith('/') ? 
-                            `http://localhost:5000${currentUser.profile_picture}` : 
-                            `http://localhost:5000/uploads/profiles/${currentUser.profile_picture}`
+                            `${process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000'}${currentUser.profile_picture}` : 
+                            `${process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000'}/uploads/profiles/${currentUser.profile_picture}`
                           } 
                           alt="Profile"
                           onError={(e) => {

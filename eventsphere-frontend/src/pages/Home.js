@@ -585,7 +585,7 @@ const Home = () => {
               {events.slice(0, 6).map(event => (
                 <EventCard key={event.id} onClick={() => navigate(`/events/${event.id}`)}>
                   {(event.cover_image || event.event_image) && (
-                    <EventImage src={`http://localhost:5000${event.cover_image || event.event_image}`} alt={event.title} />
+                    <EventImage src={`${process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000'}${event.cover_image || event.event_image}`} alt={event.title} />
                   )}
                   <EventContent>
                     <EventTitle>{event.title}</EventTitle>

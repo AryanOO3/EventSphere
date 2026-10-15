@@ -155,7 +155,7 @@ const ProfilePictureUpload = ({ currentUser, onUpdate }) => {
     }
   };
 
-  const profileImageSrc = preview || (currentUser?.profile_picture ? `http://localhost:5000${currentUser.profile_picture}` : null);
+  const profileImageSrc = preview || (currentUser?.profile_picture ? `${process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000'}${currentUser.profile_picture}` : null);
 
   return (
     <UploadWrapper>
