@@ -88,7 +88,7 @@ exports.forgotPassword = async (req, res) => {
       console.error("Email error:", emailError.message);
       res.json({ 
         message: "Email delivery failed. Use the reset button below:", 
-        resetUrl: `http://localhost:3000/reset-password/${resetToken}`,
+        resetUrl: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/reset-password/${resetToken}`,
         emailError: emailError.message
       });
     }
